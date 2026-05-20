@@ -203,7 +203,7 @@ notificationLayout.Padding = UDim.new(0, 6)
 notificationLayout.HorizontalAlignment = Enum.HorizontalAlignment.Right
 notificationLayout.VerticalAlignment = Enum.VerticalAlignment.Bottom
 notificationLayout.Parent = notificationContainer
-Notify("Welcome to C00lClan!", "Have fun!", 3)
+Notify("Welcome to C00lClanv3!", "Have fun!", 3)
 -- Main frame
 local mainFrame = Instance.new("Frame")
 mainFrame.Name            = generate_string(math_random(1, 10))
@@ -235,7 +235,7 @@ local titleLabel = Instance.new("TextLabel", titleBar)
 titleLabel.Size           = UDim2.new(1,-60,1,0)
 titleLabel.Position       = UDim2.new(0,4,0,0)
 titleLabel.BackgroundTransparency = 1
-titleLabel.Text           = "C00LCLAN V1"
+titleLabel.Text           = "C00LCLAN V3"
 titleLabel.Font           = Enum.Font.SourceSansBold
 titleLabel.TextSize       = 18
 titleLabel.TextColor3     = Color3.new(1,1,1)
@@ -254,24 +254,46 @@ minBtn.BackgroundColor3   = Color3.fromRGB(80,10,10)
 minBtn.BorderSizePixel    = 0
 
 -- Drag logic
-local dragging, dragInput, dragStart, startPos = false, nil
-local function updateDrag(input)
-	local delta = input.Position - dragStart
-	mainFrame.Position = startPos + UDim2.new(0, delta.X, 0, delta.Y)
-end
-titleBar.InputBegan:Connect(function(i)
-	if i.UserInputType==Enum.UserInputType.MouseButton1 then
-		dragging, dragStart, startPos = true, i.Position, mainFrame.Position
-		i.Changed:Connect(function()
-			if i.UserInputState==Enum.UserInputState.End then dragging=false end
+local UIS = game:GetService("UserInputService")
+
+local gui = script.Parent
+local dragging = false
+local dragStart
+local startPos
+
+gui.Active = true
+
+gui.InputBegan:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.MouseButton1
+	or input.UserInputType == Enum.UserInputType.Touch then
+		
+		dragging = true
+		dragStart = input.Position
+		startPos = gui.Position
+		
+		input.Changed:Connect(function()
+			if input.UserInputState == Enum.UserInputState.End then
+				dragging = false
+			end
 		end)
 	end
 end)
-titleBar.InputChanged:Connect(function(i)
-	if i.UserInputType==Enum.UserInputType.MouseMovement then dragInput=i end
-end)
-UserInputService.InputChanged:Connect(function(i)
-	if i==dragInput and dragging then updateDrag(i) end
+
+UIS.InputChanged:Connect(function(input)
+	if dragging and (
+		input.UserInputType == Enum.UserInputType.MouseMovement
+		or input.UserInputType == Enum.UserInputType.Touch
+	) then
+		
+		local delta = input.Position - dragStart
+		
+		gui.Position = UDim2.new(
+			startPos.X.Scale,
+			startPos.X.Offset + delta.X,
+			startPos.Y.Scale,
+			startPos.Y.Offset + delta.Y
+		)
+	end
 end)
 
 -- Category nav
@@ -1946,8 +1968,49 @@ end, "Utility", "Credits to the original maker!")
 FunctionManager:register("Fling GUI", function()
 	loadstring(game:HttpGet("https://pastebin.com/raw/VynRhxJV", true))()
 end, "Troll", "Credits to the original maker!")
+FunctionManager:register("Invis gui V2", function()
+	loadstring(game:HttpGet("https://pastebin.com/raw/hracJzLa"))()
+end, "Trolling", "Credits to the original maker!")
 
+FunctionManager:register("Thomas Train", function()
+	loadstring(game:HttpGet("https://pastebin.com/raw/dcywCSCs"))()
+end, "Troll", "Become Thomas the Dank Engine!")
 
+FunctionManager:register("I..... Am Steve", function()
+	loadstring(game:HttpGet("https://pastebin.com/raw/miABMATi"))()
+end, "Trolling", "Who are you? I... Am Steve..")
+
+FunctionManager:register("TP Tool", function()
+	loadstring(game:HttpGet("https://pastebin.com/raw/WUwLqAzr"))()
+end, "Utility", "It's a teleport tool")
+
+FunctionManager:register("GOD Mode Toggle", function()
+	loadstring(game:HttpGet("https://pastebin.com/raw/eD8HBXGS"))()
+end, "Utility", "GOD Mode Toggle GUI")
+
+FunctionManager:register("Control NPC GUI", function()
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/randomstring0/fe-source/refs/heads/main/NPC/source/main.Luau"))()
+end, "Trolling", "Credits to original script maker")
+
+FunctionManager:register("Fake VR (hat method)", function()
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/randomstring0/Qwerty/refs/heads/main/qwerty46.lua"))()
+end, "Trolling", "Credits to original script maker")
+
+FunctionManager:register("Telekinesis Powers", function()
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/randomstring0/Qwerty/refs/heads/main/qwerty1.lua"))()
+end, "Troll", "Credits to original script maker!")
+
+FunctionManager:register("Infinite Yield", function()
+	loadstring(game:HttpGet('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source'))()
+end, "General", "The classic admin commands script!")
+
+FunctionManager:register("Nameless Admin", function()
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/ltseverydayyou/Nameless-Admin/main/Source.lua"))()
+end, "General", "Slight differences from infiniteyield admin")
+
+FunctionManager:register("Drift Car", function()
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/AstraOutlight/my-scripts/refs/heads/main/fe%20car%20v3"))()
+end, "Fun", "Invisible Car :O")
 
 --init
 updateGrid()
