@@ -1,4 +1,4 @@
---Services
+--because there is no C00LCLAN V3, so I made my own hehe :).I hope you like it
 local Players = game:GetService("Players")
 local Player = Players.LocalPlayer
 local PlayerGui = Player:WaitForChild("PlayerGui")
@@ -253,24 +253,35 @@ minBtn.TextColor3         = Color3.new(1,1,1)
 minBtn.BackgroundColor3   = Color3.fromRGB(80,10,10)
 minBtn.BorderSizePixel    = 0
 
--- Drag logic
+-- Drag system
 local UIS = game:GetService("UserInputService")
 
-local gui = script.Parent
 local dragging = false
+local dragInput
 local dragStart
 local startPos
 
-gui.Active = true
+local function updateDrag(input)
+	local delta = input.Position - dragStart
 
-gui.InputBegan:Connect(function(input)
+	mainFrame.Position = UDim2.new(
+		startPos.X.Scale,
+		startPos.X.Offset + delta.X,
+		startPos.Y.Scale,
+		startPos.Y.Offset + delta.Y
+	)
+end
+
+titleBar.Active = true
+
+titleBar.InputBegan:Connect(function(input)
 	if input.UserInputType == Enum.UserInputType.MouseButton1
 	or input.UserInputType == Enum.UserInputType.Touch then
-		
+
 		dragging = true
 		dragStart = input.Position
-		startPos = gui.Position
-		
+		startPos = mainFrame.Position
+
 		input.Changed:Connect(function()
 			if input.UserInputState == Enum.UserInputState.End then
 				dragging = false
@@ -279,20 +290,16 @@ gui.InputBegan:Connect(function(input)
 	end
 end)
 
+titleBar.InputChanged:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.MouseMovement
+	or input.UserInputType == Enum.UserInputType.Touch then
+		dragInput = input
+	end
+end)
+
 UIS.InputChanged:Connect(function(input)
-	if dragging and (
-		input.UserInputType == Enum.UserInputType.MouseMovement
-		or input.UserInputType == Enum.UserInputType.Touch
-	) then
-		
-		local delta = input.Position - dragStart
-		
-		gui.Position = UDim2.new(
-			startPos.X.Scale,
-			startPos.X.Offset + delta.X,
-			startPos.Y.Scale,
-			startPos.Y.Offset + delta.Y
-		)
+	if input == dragInput and dragging then
+		updateDrag(input)
 	end
 end)
 
@@ -2011,6 +2018,18 @@ end, "General", "Slight differences from infiniteyield admin")
 FunctionManager:register("Drift Car", function()
 	loadstring(game:HttpGet("https://raw.githubusercontent.com/AstraOutlight/my-scripts/refs/heads/main/fe%20car%20v3"))()
 end, "Fun", "Invisible Car :O")
+
+FunctionManager:register("1341GUI v1", function()
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/ib4444778/1341GUIv1/refs/heads/main/The-Script"))()
+end, "Fun", "the SCRIPT gui")
+
+FunctionManager:register("Forsaken script", function()
+	loadstring(game:HttpGet("https://pastebin.com/raw/zH9Extzk"))()
+end, "Fun", "The original script was created by Glovsaken")
+
+FunctionManager:register("peta-peta original script", function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/petaschoolscr/Petapetaschool/refs/heads/main/obf_Ci1HEvK8VD8f3DfeoPJQ028d50KcIUyx5tbRl030TU5GTs0YaITUDxm45pLa2rX7.txt"))()
+end, "Fun", "Credits to original script maker!")
 
 --init
 updateGrid()
