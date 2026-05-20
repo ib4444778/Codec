@@ -2029,7 +2029,7 @@ end, "Game script", "The original script was created by Glovsaken")
 
 FunctionManager:register("peta-peta original script", function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/petaschoolscr/Petapetaschool/refs/heads/main/obf_Ci1HEvK8VD8f3DfeoPJQ028d50KcIUyx5tbRl030TU5GTs0YaITUDxm45pLa2rX7.txt"))()
-end, "Game script", "scripts for peta-peta original,Credits to original script maker!"")
+end, "Game script", "scripts for peta-peta original,Credits to original script maker!")
 
 FunctionManager:register("lalol hub backdoor", function()
 	loadstring(game:HttpGet("https://raw.githubusercontent.com/Its-LALOL/LALOL-Hub/main/Backdoor-Scanner/script"))()
