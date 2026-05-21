@@ -222,7 +222,7 @@ tooltip.BorderSizePixel    = 0
 tooltip.Visible            = false
 tooltip.ZIndex             = 100
 tooltip.ClipsDescendants   = false
-tooltip.TextColor3 = Color3.fromRGB(255, 255, 255)
+tooltip.TextColor3         = Color3.fromRGB(255, 255, 255)
 tooltip.TextWrapped = true
 -- Title bar
 local titleBar = Instance.new("Frame", mainFrame)
