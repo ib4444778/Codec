@@ -1,4 +1,4 @@
---because there is no C00LCLAN V3, so I made my own hehe :).I hope you like it 
+--project1 
 local Players = game:GetService("Players")
 local Player = Players.LocalPlayer
 local PlayerGui = Player:WaitForChild("PlayerGui")
@@ -138,7 +138,7 @@ local function Notify(text, title, duration)
 	frame.AnchorPoint = Vector2.new(1, 1)
 	frame.Size = UDim2.new(0, 300, 0, 70)
 	frame.Position = UDim2.new(1, 320, 1, -10)
-	frame.BackgroundColor3 = Color3.fromRGB(40, 0, 0)
+	frame.BackgroundColor3 = Color3.fromRGB(80,170,255)
 	frame.BackgroundTransparency = 0
 	frame.BorderSizePixel = 0
 	frame.ZIndex = 200
@@ -235,7 +235,7 @@ local titleLabel = Instance.new("TextLabel", titleBar)
 titleLabel.Size           = UDim2.new(1,-60,1,0)
 titleLabel.Position       = UDim2.new(0,4,0,0)
 titleLabel.BackgroundTransparency = 1
-titleLabel.Text           = "C00LCLAN V3"
+titleLabel.Text           = "project:1341"
 titleLabel.Font           = Enum.Font.SourceSansBold
 titleLabel.TextSize       = 18
 titleLabel.TextColor3     = Color3.new(1,1,1)
@@ -316,7 +316,7 @@ leftCat.Text              = "<"
 leftCat.Font              = Enum.Font.SourceSansBold
 leftCat.TextSize          = 24
 leftCat.TextColor3        = Color3.new(1,1,1)
-leftCat.BackgroundColor3  = Color3.fromRGB(100,0,0)
+leftCat.BackgroundColor3  = Color3.fromRGB(80,170,255)
 leftCat.BorderSizePixel   = 0
 leftCat.Name              = generate_string(math_random(1, 10))
 local catLabel = Instance.new("TextLabel", catNav)
@@ -393,7 +393,7 @@ local function updateGrid()
 		local btn = Instance.new("TextButton")
 		local isFE = FunctionManager.ISFE[name]
 		btn.Size             = UDim2.new(1,0,0,40)
-		btn.BackgroundColor3 = Color3.fromRGB(70,10,10)
+		btn.BackgroundColor3 = Color3.fromRGB(80,170,255)
 		btn.BorderSizePixel  = 0
 		btn.Font             = Enum.Font.SourceSansBold
 		btn.TextSize         = 16
@@ -427,7 +427,7 @@ logo.Name                 = generate_string(math_random(1, 10))
 logo.BackgroundTransparency = 1
 logo.Size                 = UDim2.new(1, 0, 0, 100)
 logo.Position             = UDim2.new(0, -50, 0, -100)
-logo.Image                = "rbxassetid://87486058304609"
+logo.Image                = "rbxassetid://82795327169714"
 logo.ScaleType            = Enum.ScaleType.Fit              
 logo.Parent               = mainFrame
 -- nav buttons
@@ -450,7 +450,7 @@ FunctionManager.OnFunctionAdded.Event:Connect(updateGrid)
 updateGrid()
 
 FunctionManager:register("Decal Spam", function()
-	local decalID = 8408806737
+	local decalID = 136335491843943
 	local function exPro(root)
 		for _, v in pairs(root:GetChildren()) do
 			if v:IsA("Decal") and v.Texture ~= "http://www.roblox.com/asset/?id="..decalID then
