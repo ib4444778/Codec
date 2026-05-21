@@ -209,7 +209,7 @@ local mainFrame = Instance.new("Frame")
 mainFrame.Name            = generate_string(math_random(1, 10))
 mainFrame.Size            = UDim2.new(0, GUI_WIDTH, 0, GUI_HEIGHT)
 mainFrame.Position        = UDim2.new(0.5, -GUI_WIDTH/2, 0.5, -GUI_HEIGHT/2)
-mainFrame.BackgroundColor3= Color3.fromRGB(25, 5, 5)
+mainFrame.BackgroundColor3= Color3.fromRGB(15,15,45)
 mainFrame.BorderSizePixel = 0
 mainFrame.Parent          = screenGui
 
@@ -250,7 +250,7 @@ minBtn.Text               = "_"
 minBtn.Font               = Enum.Font.SourceSansBold
 minBtn.TextSize           = 18
 minBtn.TextColor3         = Color3.new(1,1,1)
-minBtn.BackgroundColor3   = Color3.fromRGB(80,10,10)
+minBtn.BackgroundColor3   = Color3.fromRGB(80,170,255)
 minBtn.BorderSizePixel    = 0
 
 -- Drag system
@@ -427,7 +427,7 @@ logo.Name                 = generate_string(math_random(1, 10))
 logo.BackgroundTransparency = 1
 logo.Size                 = UDim2.new(1, 0, 0, 100)
 logo.Position             = UDim2.new(0, -50, 0, -100)
-logo.Image                = "rbxassetid://82795327169714"
+logo.Image                = "rbxassetid://104173040784813"
 logo.ScaleType            = Enum.ScaleType.Fit              
 logo.Parent               = mainFrame
 -- nav buttons
