@@ -2024,7 +2024,7 @@ FunctionManager:register("1341GUI v1", function()
 end, "Game script", "the SCRIPT gui")
 
 FunctionManager:register("Forsaken script", function()
-	loadstring(game:HttpGet("https://pastebin.com/raw/zH9Extzk"))()
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/r3take/Forsakan/refs/heads/main/Viperware"))()
 end, "Game script", "The original script was created by Glovsaken")
 
 FunctionManager:register("peta-peta original script", function()
