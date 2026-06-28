@@ -1,0 +1,450 @@
+local Players = game:GetService("Players")
+local Player = Players.LocalPlayer
+local PlayerGui = Player:WaitForChild("PlayerGui")
+local UserInputService = game:GetService("UserInputService")
+local RunService = game:GetService("RunService")
+local PhysicsService = game:GetService("PhysicsService")
+local Character       = Player.Character or Player.CharacterAdded:Wait()
+local Humanoid        = Character:WaitForChild("Humanoid")
+local HRP             = Character:WaitForChild("HumanoidRootPart")
+local Mouse           = Player:GetMouse()
+local CollectionService = game:GetService("CollectionService")
+local RunService = game:GetService("RunService")
+local TeleportService = game:GetService("TeleportService")
+local HttpService = game:GetService("HttpService")
+local TweenService = game:GetService("TweenService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local MarketplaceService = game:GetService("MarketplaceService")
+local StarterGui = game:GetService("StarterGui")
+local Debris = game:GetService("Debris")
+local Lighting = game:GetService("Lighting")
+local SoundService = game:GetService("SoundService")
+local player = Player
+
+local PlaceId = game.PlaceId
+local JobId = game.JobId
+--settings
+local infjump = false
+local invisRunning = false
+local noclipOn = false
+local noclipConn
+local hoverHeight
+local bindFrame, bindConn, waitingBindFunction
+local customBinds = {}
+local infJumpEnabled = false
+local infJumpConnection = nil
+local espOn = false
+local spinOn = false
+local spinBAV, lockBP
+local savedCFrame
+local invisRunning = false
+local InvisibleCharacter = nil
+local OriginalCharacter = nil
+local voidConn = nil
+local flyingEnabled = false
+local invisRunning = false
+local flyBG, flyBV, flyConn
+local ray = workspace.CurrentCamera:ScreenPointToRay(Mouse.X, Mouse.Y)
+local hit, pos = workspace:FindPartOnRay(ray, Character)
+--GUI settings
+local GUI_WIDTH     = 400
+local GUI_HEIGHT    = 320
+local TITLE_HEIGHT  = 30
+local NAV_HEIGHT    = 30
+local FOOTER_HEIGHT = 30
+local GRID_PADDING  = 4
+local GRID_COLUMNS  = 4
+
+math.randomseed(os.time())
+local character_set = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+
+local string_sub = string.sub
+local math_random = math.random
+local table_concat = table.concat
+local character_set_amount = #character_set
+local number_one = 1
+local default_length = 10
+
+
+
+local function generate_string(length)
+	local random_string = {}
+
+	for int = number_one, length or default_length do
+		local random_number = math_random(number_one, character_set_amount)
+		local character = string_sub(character_set, random_number, random_number)
+
+		random_string[#random_string + number_one] = character
+	end
+
+	return table_concat(random_string)
+end
+-- Function manager with descriptions
+local FunctionManager = {
+	CategorizedFunctions = { All = {} },
+	Categories          = { "All" },
+	CurrentCategoryIndex= 1,
+	Descriptions        = {},
+	ISFE = {},
+	OnFunctionAdded     = Instance.new("BindableEvent"),
+}
+
+function FunctionManager:register(name, callback, category, description, FE)
+	category = category or "General"
+	if not self.CategorizedFunctions[category] then
+		self.CategorizedFunctions[category] = {}
+		table.insert(self.Categories, category)
+	end
+	self.CategorizedFunctions[category][name] = callback
+	self.CategorizedFunctions.All[name]        = callback
+	self.Descriptions[name]                    = description or ""
+	self.ISFE[name]                    = FE or "yes"
+	if description == "NOT FE" then
+		self.ISFE[name] = "no"
+	end
+	self.OnFunctionAdded:Fire(category, name, callback)
+	self.OnFunctionAdded:Fire("All",      name, callback)
+	
+end
+
+function FunctionManager:getCurrentCategory()
+	return self.Categories[self.CurrentCategoryIndex]
+end
+
+function FunctionManager:cycleCategory()
+	self.CurrentCategoryIndex = self.CurrentCategoryIndex % #self.Categories + 1
+	return self:getCurrentCategory()
+end
+
+
+
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name        = generate_string(math_random(1, 10))
+local die = screenGui.Name
+screenGui.ResetOnSpawn= false
+screenGui.Parent      = PlayerGui
+local notificationContainer = Instance.new("Frame")
+notificationContainer.Name = "NotificationContainer"
+notificationContainer.Size = UDim2.new(1, 0, 1, 0)
+notificationContainer.Position = UDim2.new(0, 0, 0, 0)
+notificationContainer.BackgroundTransparency = 1
+notificationContainer.ZIndex = 100
+notificationContainer.Parent = screenGui
+local function Notify(text, title, duration)
+	duration = duration or 4
+
+	local frame = Instance.new("Frame")
+	frame.AnchorPoint = Vector2.new(1, 1)
+	frame.Size = UDim2.new(0, 300, 0, 70)
+	frame.Position = UDim2.new(1, 320, 1, -10)
+	frame.BackgroundColor3 = Color3.fromRGB(40, 0, 0)
+	frame.BackgroundTransparency = 0
+	frame.BorderSizePixel = 0
+	frame.ZIndex = 200
+	frame.Parent = notificationContainer
+
+	local titleLabel = Instance.new("TextLabel")
+	titleLabel.BackgroundTransparency = 1
+	titleLabel.Size = UDim2.new(1, -10, 0, 24)
+	titleLabel.Position = UDim2.new(0, 5, 0, 4)
+	titleLabel.Font = Enum.Font.SourceSansBold
+	titleLabel.Text = title or "Notice"
+	titleLabel.TextColor3 = Color3.new(1, 1, 1)
+	titleLabel.TextSize = 18
+	titleLabel.TextXAlignment = Enum.TextXAlignment.Left
+	titleLabel.ZIndex = 201
+	titleLabel.Parent = frame
+
+	local bodyLabel = Instance.new("TextLabel")
+	bodyLabel.BackgroundTransparency = 1
+	bodyLabel.Size = UDim2.new(1, -10, 1, -30)
+	bodyLabel.Position = UDim2.new(0, 5, 0, 28)
+	bodyLabel.Font = Enum.Font.SourceSans
+	bodyLabel.Text = text or ""
+	bodyLabel.TextColor3 = Color3.new(1, 1, 1)
+	bodyLabel.TextSize = 14
+	bodyLabel.TextWrapped = true
+	bodyLabel.TextXAlignment = Enum.TextXAlignment.Left
+	bodyLabel.ZIndex = 201
+	bodyLabel.Parent = frame
+
+	task.defer(function()
+		local slideIn = TweenService:Create(frame, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+			Position = UDim2.new(1, -10, 1, -10)
+		})
+		slideIn:Play()
+	end)
+
+
+	task.delay(duration, function()
+		local fadeOut = TweenService:Create(frame, TweenInfo.new(0.3), {
+			BackgroundTransparency = 1,
+			Position = UDim2.new(1, 320, 1, -10)
+		})
+		local titleFade = TweenService:Create(titleLabel, TweenInfo.new(0.3), {TextTransparency = 1})
+		local bodyFade = TweenService:Create(bodyLabel, TweenInfo.new(0.3), {TextTransparency = 1})
+
+		fadeOut:Play()
+		titleFade:Play()
+		bodyFade:Play()
+
+		fadeOut.Completed:Wait()
+		frame:Destroy()
+	end)
+end
+
+
+
+
+local notificationLayout = Instance.new("UIListLayout")
+notificationLayout.SortOrder = Enum.SortOrder.LayoutOrder
+notificationLayout.Padding = UDim.new(0, 6)
+notificationLayout.HorizontalAlignment = Enum.HorizontalAlignment.Right
+notificationLayout.VerticalAlignment = Enum.VerticalAlignment.Bottom
+notificationLayout.Parent = notificationContainer
+Notify("Welcome to C00lClanv3!", "Have fun!", 3)
+-- Main frame
+local mainFrame = Instance.new("Frame")
+mainFrame.Name            = generate_string(math_random(1, 10))
+mainFrame.Size            = UDim2.new(0, GUI_WIDTH, 0, GUI_HEIGHT)
+mainFrame.Position        = UDim2.new(0.5, -GUI_WIDTH/2, 0.5, -GUI_HEIGHT/2)
+mainFrame.BackgroundColor3= Color3.fromRGB(25, 5, 5)
+mainFrame.BorderSizePixel = 0
+mainFrame.Parent          = screenGui
+
+-- Tooltip
+local tooltip = Instance.new("TextLabel", screenGui)
+tooltip.Name               = generate_string(math_random(1, 10))
+tooltip.Size               = UDim2.new(0, 200, 0, 40)
+tooltip.BackgroundColor3   = Color3.fromRGB(30,30,30)
+tooltip.BorderSizePixel    = 0
+tooltip.Visible            = false
+tooltip.ZIndex             = 100
+tooltip.ClipsDescendants   = false
+tooltip.TextColor3 = Color3.fromRGB(255, 255, 255)
+tooltip.TextWrapped = true
+-- Title bar
+local titleBar = Instance.new("Frame", mainFrame)
+titleBar.Name             = generate_string(math_random(1, 10))
+titleBar.Size             = UDim2.new(1,0,0,TITLE_HEIGHT)
+titleBar.BackgroundColor3 = Color3.fromRGB(60,0,0)
+titleBar.BorderSizePixel  = 0
+
+local titleLabel = Instance.new("TextLabel", titleBar)
+titleLabel.Size           = UDim2.new(1,-60,1,0)
+titleLabel.Position       = UDim2.new(0,4,0,0)
+titleLabel.BackgroundTransparency = 1
+titleLabel.Text           = "C00LCLAN V3"
+titleLabel.Font           = Enum.Font.SourceSansBold
+titleLabel.TextSize       = 18
+titleLabel.TextColor3     = Color3.new(1,1,1)
+titleLabel.TextXAlignment = Enum.TextXAlignment.Left
+titleLabel.Name           = generate_string(math_random(1, 10))
+
+local minBtn = Instance.new("TextButton", titleBar)
+minBtn.Name               = generate_string(math_random(1, 10))
+minBtn.Size               = UDim2.new(0,30,1,0)
+minBtn.Position           = UDim2.new(1,-30,0,0)
+minBtn.Text               = "_"
+minBtn.Font               = Enum.Font.SourceSansBold
+minBtn.TextSize           = 18
+minBtn.TextColor3         = Color3.new(1,1,1)
+minBtn.BackgroundColor3   = Color3.fromRGB(80,10,10)
+minBtn.BorderSizePixel    = 0
+
+-- Drag system
+local UIS = game:GetService("UserInputService")
+
+local dragging = false
+local dragInput
+local dragStart
+local startPos
+
+local function updateDrag(input)
+	local delta = input.Position - dragStart
+
+	mainFrame.Position = UDim2.new(
+		startPos.X.Scale,
+		startPos.X.Offset + delta.X,
+		startPos.Y.Scale,
+		startPos.Y.Offset + delta.Y
+	)
+end
+
+titleBar.Active = true
+
+titleBar.InputBegan:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.MouseButton1
+	or input.UserInputType == Enum.UserInputType.Touch then
+
+		dragging = true
+		dragStart = input.Position
+		startPos = mainFrame.Position
+
+		input.Changed:Connect(function()
+			if input.UserInputState == Enum.UserInputState.End then
+				dragging = false
+			end
+		end)
+	end
+end)
+
+titleBar.InputChanged:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.MouseMovement
+	or input.UserInputType == Enum.UserInputType.Touch then
+		dragInput = input
+	end
+end)
+
+UIS.InputChanged:Connect(function(input)
+	if input == dragInput and dragging then
+		updateDrag(input)
+	end
+end)
+
+-- Category nav
+local catNav = Instance.new("Frame", mainFrame)
+catNav.Name               = generate_string(math_random(1, 10))
+catNav.Size               = UDim2.new(1,0,0,NAV_HEIGHT)
+catNav.Position           = UDim2.new(0,0,0,TITLE_HEIGHT)
+catNav.BackgroundTransparency = 1
+
+local leftCat = Instance.new("TextButton", catNav)
+leftCat.Size              = UDim2.new(0,50,1,0)
+leftCat.Text              = "<"
+leftCat.Font              = Enum.Font.SourceSansBold
+leftCat.TextSize          = 24
+leftCat.TextColor3        = Color3.new(1,1,1)
+leftCat.BackgroundColor3  = Color3.fromRGB(100,0,0)
+leftCat.BorderSizePixel   = 0
+leftCat.Name              = generate_string(math_random(1, 10))
+local catLabel = Instance.new("TextLabel", catNav)
+catLabel.Size             = UDim2.new(1,-100,1,0)
+catLabel.Position         = UDim2.new(0,50,0,0)
+catLabel.BackgroundTransparency = 1
+catLabel.Text             = "All"
+catLabel.Font             = Enum.Font.SourceSansBold
+catLabel.TextSize         = 18
+catLabel.TextColor3       = Color3.new(1,1,1)
+catNav.Name               = generate_string(math_random(1, 10))
+local rightCat = leftCat:Clone()
+rightCat.Parent           = catNav
+rightCat.Position         = UDim2.new(1,-50,0,0)
+rightCat.Text             = ">"
+rightCat.Name = generate_string(math_random(1, 10))
+
+-- Grid
+local gridFrame = Instance.new("ScrollingFrame", mainFrame)
+gridFrame.Name            = generate_string(math_random(1, 10))
+gridFrame.ClipsDescendants= true
+gridFrame.Size            = UDim2.new(1,-2*GRID_PADDING,0,GUI_HEIGHT-TITLE_HEIGHT-NAV_HEIGHT-FOOTER_HEIGHT-2*GRID_PADDING)
+gridFrame.Position        = UDim2.new(0,GRID_PADDING,0,TITLE_HEIGHT+NAV_HEIGHT+GRID_PADDING)
+gridFrame.BackgroundTransparency = 1
+
+local gridLayout = Instance.new("UIGridLayout", gridFrame)
+gridLayout.Name           = generate_string(math_random(1, 10))
+gridLayout.CellSize       = UDim2.new(0,(GUI_WIDTH-2*GRID_PADDING-(GRID_COLUMNS-1)*GRID_PADDING)/GRID_COLUMNS,0,40)
+gridLayout.CellPadding    = UDim2.new(0,GRID_PADDING,0,GRID_PADDING)
+gridLayout.SortOrder      = Enum.SortOrder.LayoutOrder
+
+-- Footer
+local footer = Instance.new("Frame", mainFrame)
+footer.Name               = generate_string(math_random(1, 10))
+footer.Size               = UDim2.new(1,0,0,FOOTER_HEIGHT)
+footer.Position           = UDim2.new(0,0,1,-FOOTER_HEIGHT)
+footer.BackgroundTransparency = 1
+
+local closeBtn = Instance.new("TextButton", footer)
+closeBtn.Size             = UDim2.new(1,0,1,0)
+closeBtn.Text             = "Close"
+closeBtn.Font             = Enum.Font.SourceSansBold
+closeBtn.TextSize         = 18
+closeBtn.TextColor3       = Color3.new(1,1,1)
+closeBtn.BackgroundColor3 = Color3.fromRGB(100,0,0)
+closeBtn.BorderSizePixel  = 0
+closeBtn.Name             = generate_string(math_random(1, 10))
+-- Minimize toggle
+local minimized = false
+minBtn.MouseButton1Click:Connect(function()
+	minimized = not minimized
+	if minimized == true then
+		mainFrame.BackgroundTransparency = 1
+	else
+		mainFrame.BackgroundTransparency = 0
+	end
+	gridFrame.Visible     = not minimized
+	catNav.Visible        = not minimized
+	footer.Visible        = not minimized
+	minBtn.Text           = minimized and "◻" or "_"
+end)
+local function NotifyERROR(text)
+	Notify(text, "ERROR", 3)
+end
+-- Build the grid and tooltips
+local function updateGrid()
+	for _, c in ipairs(gridFrame:GetChildren()) do
+		if c:IsA("TextButton") then c:Destroy() end
+	end
+	local cat = FunctionManager:getCurrentCategory()
+	catLabel.Text = cat
+
+	for name, cb in pairs(FunctionManager.CategorizedFunctions[cat]) do
+		local btn = Instance.new("TextButton")
+		local isFE = FunctionManager.ISFE[name]
+		btn.Size             = UDim2.new(1,0,0,40)
+		btn.BackgroundColor3 = Color3.fromRGB(70,10,10)
+		btn.BorderSizePixel  = 0
+		btn.Font             = Enum.Font.SourceSansBold
+		btn.TextSize         = 16
+		btn.TextColor3       = Color3.new(1,1,1)
+		btn.Text             = name
+		btn.TextWrapped      = true
+		btn.Parent           = gridFrame
+		btn.Name             = generate_string(math_random(1, 10))
+		if isFE == "no" then
+			btn.BackgroundColor3 = Color3.fromRGB(72, 100, 87)
+		end
+		-- tooltip
+		local desc = FunctionManager.Descriptions[name]
+		
+		btn.MouseMoved:Connect(function()
+			if desc ~= "" and desc ~= nil then
+				tooltip.Text     = desc
+				tooltip.Position = UDim2.new(0,Mouse.X,0,Mouse.Y - tooltip.Size.Y.Offset - 4)
+				tooltip.Visible = true
+			end
+		end)
+		btn.MouseLeave:Connect(function() tooltip.Visible = false end)
+
+		btn.MouseButton1Click:Connect(function()
+			pcall(cb)
+		end)
+	end
+end
+local logo = Instance.new("ImageLabel")
+logo.Name                 = generate_string(math_random(1, 10))
+logo.BackgroundTransparency = 1
+logo.Size                 = UDim2.new(1, 0, 0, 100)
+logo.Position             = UDim2.new(0, -50, 0, -100)
+logo.Image                = "rbxassetid://87486058304609"
+logo.ScaleType            = Enum.ScaleType.Fit              
+logo.Parent               = mainFrame
+-- nav buttons
+leftCat.MouseButton1Click:Connect(function()
+	FunctionManager.CurrentCategoryIndex = (FunctionManager.CurrentCategoryIndex - 2) % #FunctionManager.Categories + 1
+	updateGrid()
+end)
+rightCat.MouseButton1Click:Connect(function()
+	FunctionManager:cycleCategory()
+	updateGrid()
+end)
+closeBtn.MouseButton1Click:Connect(function()
+	screenGui:Destroy()
+end)
+FunctionManager.OnFunctionAdded.Event:Connect(updateGrid)
+
+
+
+-- Initialize
+updateGrid()
+
