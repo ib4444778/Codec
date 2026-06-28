@@ -448,3 +448,12 @@ FunctionManager.OnFunctionAdded.Event:Connect(updateGrid)
 -- Initialize
 updateGrid()
 
+FunctionManager:register("tora is me", function()
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/gumanba/Scripts/refs/heads/main/AnimalHospital"))()
+end, "Catch remotes", "Credits to original script maker!")
+
+FunctionManager:register("vexushub", function()
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/eiis2id2idi/Vexus-hub/refs/heads/main/README.md"))()
+end, "Catch remotes", "Credits to original script maker!")
+
+
