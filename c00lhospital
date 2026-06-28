@@ -456,4 +456,5 @@ FunctionManager:register("vexushub", function()
 	loadstring(game:HttpGet("https://raw.githubusercontent.com/eiis2id2idi/Vexus-hub/refs/heads/main/README.md"))()
 end, "Catch remotes", "Credits to original script maker!")
 
-
+--init
+updateGrid()
