@@ -425,8 +425,8 @@ end
 local logo = Instance.new("ImageLabel")
 logo.Name                 = generate_string(math_random(1, 10))
 logo.BackgroundTransparency = 1
-logo.Size                 = UDim2.new(1, 0, 0, 100)
-logo.Position             = UDim2.new(0, -50, 0, -100)
+logo.Size                 = UDim2.new(1, 0, 0, 200)
+logo.Position             = UDim2.new(0, -78, 0, -168)
 logo.Image                = "rbxassetid://104173040784813"
 logo.ScaleType            = Enum.ScaleType.Fit              
 logo.Parent               = mainFrame
